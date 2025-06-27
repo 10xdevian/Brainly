@@ -1,22 +1,20 @@
 import { NextFunction, Request, Response } from "express";
-import { CoustomError } from "../utils/CustomError";
 
+interface CoutomeError extends Error {
+  statusCode: number;
+  status: string;
+}
 export const errorHandler = (
-  error: Error,
+  error: CoutomeError,
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  if (error instanceof CoustomError) {
-    return res.status(error.statusCode).json({
-      success: false,
-      message: error.message,
-    });
-  }
+  error.statusCode = error.statusCode || 500;
+  error.status = error.status || "error";
 
-  console.error(`[Error] ${req.method} ${req.url}:`, error);
-  res.status(500).json({
-    success: false,
-    message: "Somthing went wrong",
+  res.status(error.statusCode).json({
+    status: error.status,
+    message: error.message,
   });
 };

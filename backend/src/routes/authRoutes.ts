@@ -7,9 +7,9 @@ import {
 const router = Express.Router();
 
 //  register Api
-router.get("/signup", signupController);
+router.post("/signup", signupController);
 
 //  Login controllers
-router.get("/signin", signinController);
+router.post("/signin", signinController);
 
 export default router;
