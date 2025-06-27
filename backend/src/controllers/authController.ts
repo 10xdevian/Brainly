@@ -4,8 +4,9 @@ import {
   findUserByEmailOrUsername,
 } from "../services/authServices";
 
-import { hashedPassword } from "../utils/hashPassword";
+import { comparePassword, hashedPassword } from "../utils/hashPassword";
 import { ErrorHandler } from "../utils/errorHandler";
+import generateToken from "../utils/authHandler";
 export const signupController = async (
   req: Request,
   res: Response,
@@ -15,7 +16,7 @@ export const signupController = async (
 
   try {
     //  find user
-    const userExist = await findUserByEmailOrUsername(email, username);
+    const userExist = await findUserByEmailOrUsername(email, password);
 
     if (userExist) {
       throw new ErrorHandler(401, "Username and email are already use yes  ");
@@ -45,5 +46,44 @@ export const signinController = async (
   res: Response,
   next: NextFunction,
 ) => {
-  res.send("signin");
+  const { email, password } = req.body;
+  try {
+    const userExist = await findUserByEmailOrUsername(email, password);
+
+    if (!userExist) {
+      throw new ErrorHandler(401, "User doesnot exists Signup first");
+    }
+
+    //  check password is correct or not
+    const correctHashedPassword = await comparePassword(
+      password,
+      userExist.password,
+    );
+
+    if (!correctHashedPassword) {
+      throw new ErrorHandler(
+        401,
+        "Password doesnot match Enter correct password",
+      );
+    }
+
+    const { refreshToken, accessToken } = await generateToken({
+      email: userExist.email,
+      _id: userExist._id.toString(),
+    });
+
+    res.status(200).json({
+      success: true,
+      msg: "Signin successful",
+      accessToken,
+      refreshToken,
+      user: {
+        id: userExist._id,
+        email: userExist.email,
+        username: userExist.username,
+      },
+    });
+  } catch (error: any) {
+    next(error);
+  }
 };
