@@ -1,6 +1,7 @@
 import { NextFunction, Response, Request } from "express";
 import { ContentModel } from "../models/contentModel";
 import { TagModel } from "../models/tagModel";
+import { ErrorHandler } from "../utils/errorHandler";
 
 export const addContent = async (
   req: Request,
@@ -67,6 +68,32 @@ export const getContent = async (
     res.status(200).json({
       succes: true,
       data: formatedContent,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteContent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const contentId = req.params.id;
+    // @ts-ignore
+    const userId = req.user._id;
+
+    const content = await ContentModel.findOne({ _id: contentId, userId });
+
+    if (!content) {
+      throw new ErrorHandler(404, "Content not found ");
+    }
+
+    await ContentModel.deleteOne({ _id: contentId });
+    res.status(201).json({
+      success: true,
+      msg: "User deleted",
     });
   } catch (error) {
     next(error);

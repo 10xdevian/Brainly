@@ -4,7 +4,7 @@ import {
   signupController,
 } from "../controllers/authController";
 import { authMiddleware } from "../middleware/authMiddleware";
-import { addContent, getContent } from "../controllers/contentController";
+import { addContent, deleteContent, getContent } from "../controllers/contentController";
 
 const router = Express.Router();
 
@@ -16,6 +16,7 @@ router.post("/signin", signinController);
 
 router.post("/content", authMiddleware, addContent);
 router.get("/content", authMiddleware,getContent );
+router.delete("/content/:id", authMiddleware,deleteContent );
 
 
 export default router;
