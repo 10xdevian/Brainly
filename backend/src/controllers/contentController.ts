@@ -1,7 +1,7 @@
 import { NextFunction, Response, Request } from "express";
 import { ContentModel } from "../models/contentModel";
 import { TagModel } from "../models/tagModel";
-import { ErrorHandler } from "../utils/errorHandler";
+import { ErrorHandler } from "../utils/ErrorHandler";
 
 export const addContent = async (
   req: Request,
