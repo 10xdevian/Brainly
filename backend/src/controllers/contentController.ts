@@ -39,3 +39,36 @@ export const addContent = async (
     next(error);
   }
 };
+
+export const getContent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    //@ts-ignore
+    const userId = req.user._id;
+
+    const userContent = await ContentModel.find({ userId }) // we are doing filter here bu userid
+      .select("title link type tags")
+      .populate("tags", "title")
+      .lean(); // Get plain JS objects
+
+    //  convert tag to tagname
+
+    const formatedContent = userContent.map((content: any) => ({
+      id: content._id,
+      title: content.title,
+      link: content.link,
+      type: content.type,
+      tags: content.tags.map((tag: any) => tag.title),
+    }));
+
+    res.status(200).json({
+      succes: true,
+      data: formatedContent,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
