@@ -3,6 +3,8 @@ import {
   signinController,
   signupController,
 } from "../controllers/authController";
+import { authMiddleware } from "../middleware/authMiddleware";
+import { addContent } from "../controllers/contentController";
 
 const router = Express.Router();
 
@@ -11,5 +13,7 @@ router.post("/signup", signupController);
 
 //  Login controllers
 router.post("/signin", signinController);
+
+router.post("/content", authMiddleware, addContent);
 
 export default router;

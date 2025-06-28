@@ -7,6 +7,8 @@ import {
 import { comparePassword, hashedPassword } from "../utils/hashPassword";
 import { ErrorHandler } from "../utils/errorHandler";
 import generateToken from "../utils/authHandler";
+
+
 export const signupController = async (
   req: Request,
   res: Response,

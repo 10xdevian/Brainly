@@ -4,7 +4,7 @@ dotenv.config();
 import Express from "express";
 import cors from "cors";
 import dbConnect from "./db";
-import router from "./routes/authRoutes";
+import router from "./routes/apiRoutes";
 
 const PORT = process.env.PORT || 4000;
 
@@ -13,7 +13,7 @@ app.use(cors());
 app.use(Express.json());
 app.use(cors());
 
-app.use("/api/auth", router);
+app.use("/api/v1/", router);
 
 app.listen(3000, () => {
   console.log("server is starting ");
