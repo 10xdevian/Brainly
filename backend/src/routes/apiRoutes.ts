@@ -4,7 +4,12 @@ import {
   signupController,
 } from "../controllers/authController";
 import { authMiddleware } from "../middleware/authMiddleware";
-import { addContent, deleteContent, getContent } from "../controllers/contentController";
+import {
+  addContent,
+  deleteContent,
+  getContent,
+} from "../controllers/contentController";
+import { share, sharePublicLink } from "../controllers/brainController";
 
 const router = Express.Router();
 
@@ -15,8 +20,10 @@ router.post("/signup", signupController);
 router.post("/signin", signinController);
 
 router.post("/content", authMiddleware, addContent);
-router.get("/content", authMiddleware,getContent );
-router.delete("/content/:id", authMiddleware,deleteContent );
+router.get("/content", authMiddleware, getContent);
+router.delete("/content/:id", authMiddleware, deleteContent);
+router.post("/brain/share", authMiddleware, share);
 
+router.get("/brain/:shareLink", sharePublicLink);
 
 export default router;

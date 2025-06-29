@@ -2,6 +2,7 @@ import { NextFunction, Response, Request } from "express";
 import { ContentModel } from "../models/contentModel";
 import { TagModel } from "../models/tagModel";
 import { ErrorHandler } from "../utils/ErrorHandler";
+import { linkModel } from "../models/linkModel";
 
 export const addContent = async (
   req: Request,
@@ -22,7 +23,7 @@ export const addContent = async (
       }),
     );
 
-    const newContent = await ContentModel.create({
+    await ContentModel.create({
       title,
       link,
       type,
@@ -99,3 +100,5 @@ export const deleteContent = async (
     next(error);
   }
 };
+
+
